@@ -1,0 +1,11 @@
+/run/media/artem/Data/Nextcloud/Study/KPI/Course_2/dotNet/Lab1/bin/Debug/netcoreapp3.1/Lab1
+/run/media/artem/Data/Nextcloud/Study/KPI/Course_2/dotNet/Lab1/bin/Debug/netcoreapp3.1/Lab1.deps.json
+/run/media/artem/Data/Nextcloud/Study/KPI/Course_2/dotNet/Lab1/bin/Debug/netcoreapp3.1/Lab1.runtimeconfig.json
+/run/media/artem/Data/Nextcloud/Study/KPI/Course_2/dotNet/Lab1/bin/Debug/netcoreapp3.1/Lab1.runtimeconfig.dev.json
+/run/media/artem/Data/Nextcloud/Study/KPI/Course_2/dotNet/Lab1/bin/Debug/netcoreapp3.1/Lab1.dll
+/run/media/artem/Data/Nextcloud/Study/KPI/Course_2/dotNet/Lab1/bin/Debug/netcoreapp3.1/Lab1.pdb
+/run/media/artem/Data/Nextcloud/Study/KPI/Course_2/dotNet/Lab1/obj/Debug/netcoreapp3.1/Lab1.csprojAssemblyReference.cache
+/run/media/artem/Data/Nextcloud/Study/KPI/Course_2/dotNet/Lab1/obj/Debug/netcoreapp3.1/Lab1.AssemblyInfoInputs.cache
+/run/media/artem/Data/Nextcloud/Study/KPI/Course_2/dotNet/Lab1/obj/Debug/netcoreapp3.1/Lab1.AssemblyInfo.cs
+/run/media/artem/Data/Nextcloud/Study/KPI/Course_2/dotNet/Lab1/obj/Debug/netcoreapp3.1/Lab1.dll
+/run/media/artem/Data/Nextcloud/Study/KPI/Course_2/dotNet/Lab1/obj/Debug/netcoreapp3.1/Lab1.pdb
