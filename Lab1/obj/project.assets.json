@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/run/media/artem/Data/Nextcloud/Study/KPI/Course_2/dotNet/Lab1/Lab1.csproj",
+      "projectUniqueName": "/run/media/artem/Data/Nextcloud/git/Other_repos/dotnet_2nd_course/Lab1/Lab1.csproj",
       "projectName": "Lab1",
-      "projectPath": "/run/media/artem/Data/Nextcloud/Study/KPI/Course_2/dotNet/Lab1/Lab1.csproj",
+      "projectPath": "/run/media/artem/Data/Nextcloud/git/Other_repos/dotnet_2nd_course/Lab1/Lab1.csproj",
       "packagesPath": "/home/artem/.nuget/packages/",
-      "outputPath": "/run/media/artem/Data/Nextcloud/Study/KPI/Course_2/dotNet/Lab1/obj/",
+      "outputPath": "/run/media/artem/Data/Nextcloud/git/Other_repos/dotnet_2nd_course/Lab1/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/artem/.nuget/NuGet/NuGet.Config"
