@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System;
 
 namespace Lab1 {
-    class Flight {
-        public static List<Flight> Flights = new List<Flight>();
+    class Route : IRoute, IBase {
+        public Guid Id { get; set; }
         public string Carrier {get; set; }
         public string Code {get; set;}
         public Airport AirportDepart {get; set; }

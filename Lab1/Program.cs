@@ -6,8 +6,12 @@ namespace Lab1
     {
         static void Main(string[] args)
         {
-            Generator.GenerateAll();
-            Interface.MainMenu();
+            Database db = new Database();
+            DaoFactory factory = new DaoFactory(db);
+            SampleDataGenerator generator = new SampleDataGenerator(factory);
+            generator.GenerateAll();
+            ConsoleInterface iFace = new ConsoleInterface(factory);
+            iFace.Begin();
         }
     }
 }

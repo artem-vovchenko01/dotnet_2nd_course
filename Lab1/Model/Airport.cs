@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System;
 
 namespace Lab1 {
-    class Airport {
+    class Airport : IBase {
+        public Guid Id { get; set; }
         public static List<Airport> Airports = new List<Airport>();
         public string Name {get; set;}
         public string City {get; set; }

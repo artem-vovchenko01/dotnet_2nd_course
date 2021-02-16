@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using System;
 
 namespace Lab1 
 {
-    class Client {
-        public static List<Client> Clients = new List<Client>();
+    class Passenger : IBase {
+        public Guid Id { get; set; }
         public string Name {get; set;}
         public string Surname {get; set; }
         public long Passport {get; set; }
