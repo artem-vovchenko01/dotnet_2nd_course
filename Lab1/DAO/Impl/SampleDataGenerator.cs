@@ -4,8 +4,10 @@ using System.Collections.Generic;
 namespace Lab1 {
     class SampleDataGenerator {
         private DaoFactory db;
+        private FlightService flightService;
         public SampleDataGenerator(DaoFactory factory) {
             db = factory;
+            flightService = new FlightService(db);
         }
         public void GeneratePassengers() {
             Passenger p1 = new Passenger {Name = "Dmytro", Surname = "Polishchuk", Age = 21,
@@ -37,7 +39,6 @@ namespace Lab1 {
             DateTime arriveDate2= new DateTime(2021, 2, 15, 9, 55, 0);
             DateTime limit = new DateTime(2021, 4, 1);
             for (; departDate1 < limit && arriveDate1 < limit && departDate2 < limit && arriveDate2 < limit;) {
-                Itinerary itinerary = new Itinerary();
                 Flight flight = new Flight {Route = r1, TimeArrive = arriveDate1, TimeDepart = departDate1 };
                 Flight flight2 = new Flight {Route = r2, TimeArrive = arriveDate2, TimeDepart = departDate2};
                 db.FlightDao.Add(flight);
@@ -51,7 +52,29 @@ namespace Lab1 {
         }
 
         public void GenerateTickets() {
-            
+            Random r = new Random();
+            r.Next(3);
+            int adults, children, flightIdx, passengerIdx;
+            Passenger passenger;
+            Flight flight;
+            List<int> seats;
+            List<int> seatsAvail;
+            Ticket ticket;
+
+            for (int i=0; i<500; i++) {
+                adults = r.Next(3) + 1;
+                children = r.Next(2);
+                flightIdx = r.Next(db.FlightDao.GetAll().Count);
+                passengerIdx = r.Next(db.PassengerDao.GetAll().Count);
+                passenger = db.PassengerDao.GetAll()[passengerIdx];
+                flight = db.FlightDao.GetAll()[flightIdx];
+                seatsAvail = flightService.SeatsAvailable(flight);
+                seats = new List<int>();
+                if (adults > seatsAvail.Count || DateTime.Now > flight.TimeDepart) continue;
+                while (seats.Count != adults) seats.Add(seatsAvail[ r.Next(seatsAvail.Count) ]);
+                ticket = Ticket.GetNewTicket(passenger, adults, children, seats, flight, db);
+                db.TicketDao.Add(ticket);
+            }
         }
 
         public void GenerateAll() {

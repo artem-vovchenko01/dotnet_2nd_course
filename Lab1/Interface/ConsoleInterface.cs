@@ -6,10 +6,12 @@ namespace Lab1 {
     class ConsoleInterface : IInterface {
         private DaoFactory db;
         private ConsoleFlightFilter flightFilter;
-        private ItineraryService itineraryService;
+        private TicketService ticketService;
+        private FlightService flightService;
         public ConsoleInterface(DaoFactory factory) {
             db = factory;
-            itineraryService = new ItineraryService(db);
+            ticketService = new TicketService(factory);
+            flightService = new FlightService(factory);
         }
         public void Begin() {
             flightFilter = new ConsoleFlightFilter(db);
@@ -20,57 +22,77 @@ namespace Lab1 {
         inp = Console.ReadLine();
         List<IFlight> flights = new List<IFlight>();
         IFlight flight = null;
-        Flight flightOnly = null;
         switch (inp.Trim()) {
             case "q": 
             done = true;
             break;
             case "1":
-                flights = new List<IFlight>();
-                db.FlightDao.GetAll().ForEach(f => flights.Add(f));
-                db.ItineraryDao.GetAll().ForEach(i => flights.Add(i));
-                flights = flightFilter.Filter(flights);
+                flights = flightFilter.Filter(db.FlightDao.GetAll());
                 ShowFlights(flights);
                 break;
             case "2":
-                flights = new List<IFlight>();
-                db.FlightDao.GetAll().ForEach(f => flights.Add(f));
-                ShowFlights(flightFilter.Filter(flights));
+                flights = flightFilter.Filter(db.FlightDao.GetAll());
+                ShowFlights(flights);
                 while (true) {
-                    flightOnly = (Flight) ChooseFlight(flights);
-                    if(DelayFlight(flightOnly)) break;
+                    flight =  ChooseFlight(flights);
+                    if(DelayFlight(flight)) break;
                     else if (! AskRepeat()) break;
                 }
                 break;
-            // case "3":
-            //     flights = flightFilter.Filter(db.FlightDao.GetAll());
-            //     ShowFlights(flights);
-            //     while (true) {
-            //         flightOnly = (Flight) ChooseFlight(flights);
-            //         if (ChangeBookingDeadline(flight)) break;
-            //         else if (! AskRepeat()) break;
-            //     }
-            //     break;
+            case "3":
+                flights = flightFilter.Filter(db.FlightDao.GetAll());
+                ShowFlights(flights);
+                while (true) {
+                    flight = ChooseFlight(flights);
+                    if (ChangeBookingDeadline(flight)) break;
+                    else if (! AskRepeat()) break;
+                }
+                break;
+            case "4":
+                flights = flightFilter.Filter(db.FlightDao.GetAll());
+                ShowFlights(flights);
+                flight = ChooseFlight(flights);
+                ShowSoldTickets(flight);
+                break;
+            case "5": 
+                db.TicketDao.GetAll().ForEach(t => PrinTicket(t));
+                break;
         }
         }
         }
 
         public void ShowSoldTickets(IFlight flight) {
-            // int sold = Ticket.SoldTickets(flight);
-            // int all = flight.Flight.Airplane.Seats;
-            // int avail = all - sold;
-            // Console.WriteLine($"All tickets: {all}. ");  
-            // Console.WriteLine($"Tickets sold: {sold}, available: {avail}");
-            // int n = 1;
-            // foreach(Ticket t in Ticket.FlightTickets(flight)) {
-            //     Console.WriteLine($"\nTicket {n}: ");
-            //     Console.WriteLine($"Passenger: {t.Client}");
-            //     Console.WriteLine($"");
-            // }
+            int sold = ticketService.SoldTicketsCount(flight);
+            int all = flight.SeatsCapacity;
+            int avail = flightService.SeatsAvailableCount(flight);
+            Console.WriteLine($"All seats: {all}, available seats: {avail} ");  
+            Console.WriteLine($"Tickets sold: {sold} ");
+            int n = 1;
+            foreach(Ticket t in ticketService.SoldTickets(flight)) {
+                Console.WriteLine($"\nTicket {n}: ");
+                PrinTicket(t);
+                n++;
+            }
         }
-        public bool ChangeBookingDeadline(Flight flight) {
+        private void PrinTicket(ITicket t) {
+            Console.WriteLine("------------------------------");
+            Console.WriteLine($"Passenger: {t.Passenger}");
+            Console.WriteLine($"Adults: {t.Adults}, children: {t.Children}");
+            Console.WriteLine($"Price: {t.Price}");
+            Console.WriteLine($"Departure from: {t.Flight.Route.AirportDepart}");
+            Console.WriteLine($"Destination: {t.Flight.Route.AirportArrive}");
+            Console.WriteLine($"Departuring date: {t.Flight.TimeDepart}");
+            Console.WriteLine($"Arriving date: {t.Flight.TimeArrive}");
+            Console.WriteLine($"Seat count: {t.SeatsOccupied}");
+            Console.Write("Seat numbers: ");
+            foreach (int seat in t.SeatsOccupiedList) {
+                Console.Write(seat + " ");
+            }
+            Console.WriteLine("\n------------------------------");
+        }
+        public bool ChangeBookingDeadline(IFlight flight) {
             Console.WriteLine($"Current deadline: {flight.StopBooking}. Departure time: {flight.TimeDepart}. ");
-            Console.WriteLine("New deadline (yyyy mm dd hh ss). Should not be greater then departure time. Default - don't change anything:");
+            Console.WriteLine("New deadline (yyyy mm dd hh mm ss). Should not be greater then departure time. Default - don't change anything:");
             Console.Write("Your input: ");
             string dateStr = Console.ReadLine();
             string[] split = dateStr.Split(' ');
@@ -92,7 +114,7 @@ namespace Lab1 {
             }
             return false;
         }
-        public bool DelayFlight(Flight flight) {
+        public bool DelayFlight(IFlight flight) {
             Console.WriteLine($"Flight departures at {flight.TimeDepart}. Current delay is: {flight.MinDelayed}.");
             Console.Write("New delay (in minutes): ");
             int min;
@@ -109,23 +131,15 @@ namespace Lab1 {
         public void ShowFlights(List<IFlight> flights) {
             int idx = 0;
             foreach (IFlight f in flights) {
+                Console.WriteLine();
                 Console.WriteLine(idx + 1);
-                if (f is Flight) {
-                Console.WriteLine("Departure: " + (f as Flight).TimeDepart);
-                Console.WriteLine("Arrival: " + (f as Flight).TimeArrive);
-                Console.WriteLine("From: " + (f as Flight).Route.AirportDepart);
-                Console.Write("To: " + (f as Flight).Route.AirportArrive);
-                }
-                if (f is Itinerary) {
-                    Route itRoute = itineraryService.GetItineraryRoute(f as Itinerary);
-                    Console.WriteLine("Departure: " + itineraryService.TimeDeparture(f as Itinerary));
-                    Console.WriteLine("Arrival: " + itineraryService.TimeArrive(f as Itinerary));
-                    Console.WriteLine("From: " + itRoute.AirportDepart);
-                    Console.Write("To: " + itRoute.AirportArrive);
-                    Console.WriteLine("It is an itinerary. Contains " + itineraryService.StopCount(f as Itinerary) + " stops ");
-                }
+                Console.WriteLine("Departure: " + f.TimeDepart);
+                Console.WriteLine("Arrival: " + f.TimeArrive);
+                Console.WriteLine("From: " + f.Route.AirportDepart);
+                Console.Write("To: " + f.Route.AirportArrive);
                 idx++;
             }
+                Console.WriteLine();
         }
 
         private IFlight ChooseFlight(List<IFlight> flights) {
@@ -142,8 +156,6 @@ namespace Lab1 {
             return inp.StartsWith("y") || inp.StartsWith("Y");
         }
 
-        // private List<IFlight> FilterFlights(List<IFlight> flights, IFlightFilter filter)  
-
         private void PrintMenu() {
             Console.WriteLine("You're in the main menu. Choose action: ");
             Console.WriteLine(new string('-', 30));
@@ -151,6 +163,7 @@ namespace Lab1 {
             Console.WriteLine("| 2 - Set or cancel flight delay");
             Console.WriteLine("| 3 - Change booking deadline");
             Console.WriteLine("| 4 - Show sold tickets ");
+            Console.WriteLine("| 5 - Print all sold tickets");
             Console.WriteLine("| q - Quit");
             Console.WriteLine(new string('-', 30));
         }

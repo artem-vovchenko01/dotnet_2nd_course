@@ -7,7 +7,7 @@ namespace Lab1 {
             _entities = _db.Tickets;
         }
 
-        public List<Ticket> GetTicketsByFlight(Flight flight) {
+        public List<Ticket> GetTicketsByFlight(IFlight flight) {
             return _entities.Values.Where(t => t.Flight == flight).ToList();
         }
     }

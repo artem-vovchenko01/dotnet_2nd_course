@@ -8,11 +8,11 @@ namespace Lab1 {
             db = factory;
         }
 
-        public int SoldTicketsCount(Flight flight) {
+        public int SoldTicketsCount(IFlight flight) {
             return db.TicketDao.GetTicketsByFlight(flight).Count();
         }
 
-        public List<Ticket> SoldTickets(Flight flight) {
+        public List<Ticket> SoldTickets(IFlight flight) {
             return db.TicketDao.GetTicketsByFlight(flight);
         }
     }

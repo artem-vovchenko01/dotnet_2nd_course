@@ -23,10 +23,15 @@ namespace Lab1 {
         }
         set {_timeDepart = value; } 
         }
-
-        public Route Route {get; set; }
+        public int SeatsCapacity { get {return Route.Airplane.Seats; }}
+        public IRoute Route {get; set; }
         private DateTime _timeDepart;
         private DateTime _timeArrive;
         private DateTime _stopBooking = DateTime.MaxValue;
+        public override string ToString()
+        {
+            return "TimeDepart: " + TimeDepart + ", TimeArrive: " + TimeArrive + ", Route: " + Route + ", SeatsCapacity: " + SeatsCapacity +
+            ", MinDelayed: " + MinDelayed + ", StopBooking: " + StopBooking;
+        }
     }
 }
