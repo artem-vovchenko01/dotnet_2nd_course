@@ -3,18 +3,13 @@ using System.Linq;
 using System;
 
 namespace Lab1 {
-    class ConsoleFlightFilter : IFlightFilter {
+    class ConsoleFlightFilter {
         private DaoFactory db;
         public ConsoleFlightFilter(DaoFactory factory) {
             db = factory;
         }
-        public List<IFlight> Filter(List<Flight> flights) {
-            List<IFlight> lst = new List<IFlight>();
-            flights.ForEach(f => lst.Add(f));
-            return Filter(lst);
-        }
-        public List<IFlight> Filter(List<IFlight> flights) {
-            List<IFlight> filteredFlights;
+        public List<Flight> Filter(List<Flight> flights) {
+            List<Flight> filteredFlights;
             string startDateStr;
             string endDateStr;
             Console.WriteLine("Search flights. Choose appropriate filters. Leave blank if defaults satisfy: ");

@@ -12,7 +12,10 @@ namespace Lab1 {
         public void GeneratePassengers() {
             Passenger p1 = new Passenger {Name = "Dmytro", Surname = "Polishchuk", Age = 21,
             Passport = 4383856486};
-            db.PassengerDao.Add(p1);
+            Passenger p2 = new Passenger {Name = "Kateryna", Surname = "Ivanenko", Age = 19,
+            Passport = 4873638596};
+            List<Passenger> passengers = new List<Passenger>{p1, p2};
+            passengers.ForEach(p => db.PassengerDao.Add(p));
         }
 
         public void GenerateFlights() {
@@ -22,8 +25,8 @@ namespace Lab1 {
             List<Airport> airports = new List<Airport> {ataturk, boryspil, heathrow};
             airports.ForEach(a => db.AirportDao.Add(a));
 
-            Airplane a1 = new Airplane {Company = "Airbus", Model = "A319", Seats = 130};
-            Airplane a2 = new Airplane {Company = "Boeing", Model = "757-200", Seats = 130};
+            Airplane a1 = new Airplane {Company = "Airbus", Model = "A319", Seats = 130, DefaultPrice = 100};
+            Airplane a2 = new Airplane {Company = "Boeing", Model = "757-200", Seats = 130, DefaultPrice = 250};
             List<Airplane> airplanes = new List<Airplane> {a1, a2};
             airplanes.ForEach(a => db.AirplaneDao.Add(a));
 
@@ -33,10 +36,10 @@ namespace Lab1 {
             Route r2 = new Route {AirportDepart = ataturk, AirportArrive = heathrow, 
             Carrier = "Turkish Airlines", Code = "TK-1979", Airplane = a2};
 
-            DateTime departDate1 = new DateTime(2021, 2, 14, 11, 30, 0);
-            DateTime arriveDate1 = new DateTime(2021, 2, 14, 14, 30, 0);
-            DateTime departDate2 = new DateTime(2021, 2, 15, 8, 50, 0);
-            DateTime arriveDate2= new DateTime(2021, 2, 15, 9, 55, 0);
+            DateTime departDate1 = new DateTime(2021, 2, 24, 11, 30, 0);
+            DateTime arriveDate1 = new DateTime(2021, 2, 24, 14, 30, 0);
+            DateTime departDate2 = new DateTime(2021, 2, 25, 8, 50, 0);
+            DateTime arriveDate2 = new DateTime(2021, 2, 25, 9, 55, 0);
             DateTime limit = new DateTime(2021, 4, 1);
             for (; departDate1 < limit && arriveDate1 < limit && departDate2 < limit && arriveDate2 < limit;) {
                 Flight flight = new Flight {Route = r1, TimeArrive = arriveDate1, TimeDepart = departDate1 };

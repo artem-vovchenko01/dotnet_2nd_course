@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Lab1 {
-    class Ticket : ITicket, IBase {
+    class Ticket : IBase {
         public Guid Id { get; set; }
         private Ticket() {}
-        public static Ticket GetNewTicket(Passenger passenger, int adults, int children, List<int> seats, IFlight flight, DaoFactory db) {
+        public static Ticket GetNewTicket(Passenger passenger, int adults, int children, List<int> seats, Flight flight, DaoFactory db) {
             FlightService flightService = new FlightService(db);
             int avail;
             int adultAddPrice = 50, childrenAddPrice = 20;
@@ -22,7 +22,7 @@ namespace Lab1 {
         public int Adults {get; set; }
         public int Children {get; set; }
         public decimal Price {get; set; }
-        public IFlight Flight {get; set;}
+        public Flight Flight {get; set;}
         public Passenger Passenger {get; set; }
         private List<int> _seatsOccupiedList = new List<int>();
         public override string ToString()

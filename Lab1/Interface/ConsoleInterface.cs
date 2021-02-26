@@ -17,51 +17,61 @@ namespace Lab1 {
             flightFilter = new ConsoleFlightFilter(db);
             string inp = "";
             bool done = false;
-        while (! done) {
-        PrintMenu();
-        inp = Console.ReadLine();
-        List<IFlight> flights = new List<IFlight>();
-        IFlight flight = null;
-        switch (inp.Trim()) {
-            case "q": 
-            done = true;
-            break;
-            case "1":
-                flights = flightFilter.Filter(db.FlightDao.GetAll());
-                ShowFlights(flights);
-                break;
-            case "2":
-                flights = flightFilter.Filter(db.FlightDao.GetAll());
-                ShowFlights(flights);
-                while (true) {
-                    flight =  ChooseFlight(flights);
-                    if(DelayFlight(flight)) break;
-                    else if (! AskRepeat()) break;
-                }
-                break;
-            case "3":
-                flights = flightFilter.Filter(db.FlightDao.GetAll());
-                ShowFlights(flights);
-                while (true) {
-                    flight = ChooseFlight(flights);
-                    if (ChangeBookingDeadline(flight)) break;
-                    else if (! AskRepeat()) break;
-                }
-                break;
-            case "4":
-                flights = flightFilter.Filter(db.FlightDao.GetAll());
-                ShowFlights(flights);
-                flight = ChooseFlight(flights);
-                ShowSoldTickets(flight);
-                break;
-            case "5": 
-                db.TicketDao.GetAll().ForEach(t => PrinTicket(t));
-                break;
-        }
-        }
+            List<Flight> flights = new List<Flight>();
+            while (! done) {
+                PrintMenu();
+                inp = Console.ReadLine();
+                switch (inp.Trim()) {
+                    case "q": 
+                        done = true;
+                    break;
+                    case "1":
+                        flights = flightFilter.Filter(db.FlightDao.GetAll());
+                        ShowFlights(flights);
+                        break;
+                    case "2":
+                        MenuDelayFlight();
+                        break;
+                    case "3":
+                        MenuChangeBookingDeadline();
+                        break;
+                    case "4":
+                        MenuShowSoldTickets();
+                        break;
+                    case "5": 
+                        db.TicketDao.GetAll().ForEach(t => PrinTicket(t));
+                        break;
+                    }
+            }
         }
 
-        public void ShowSoldTickets(IFlight flight) {
+        private void MenuDelayFlight() {
+            Flight flight;
+            List<Flight> flights = flightFilter.Filter(db.FlightDao.GetAll());
+            ShowFlights(flights);
+            while (true) {
+                flight =  ChooseFlight(flights);
+                if(DelayFlight(flight)) break;
+                else if (! AskRepeat()) break;
+            }
+        }
+        private void MenuChangeBookingDeadline() {
+            List<Flight> flights = flightFilter.Filter(db.FlightDao.GetAll());
+            ShowFlights(flights);
+            Flight flight;
+            while (true) {
+                flight = ChooseFlight(flights);
+                if (ChangeBookingDeadline(flight)) break;
+                else if (! AskRepeat()) break;
+            }
+        }
+        private void MenuShowSoldTickets() {
+            List<Flight> flights = flightFilter.Filter(db.FlightDao.GetAll());
+            ShowFlights(flights);
+            Flight flight = ChooseFlight(flights);
+            ShowSoldTickets(flight);
+        }
+        public void ShowSoldTickets(Flight flight) {
             int sold = ticketService.SoldTicketsCount(flight);
             int all = flight.SeatsCapacity;
             int avail = flightService.SeatsAvailableCount(flight);
@@ -74,7 +84,7 @@ namespace Lab1 {
                 n++;
             }
         }
-        private void PrinTicket(ITicket t) {
+        private void PrinTicket(Ticket t) {
             Console.WriteLine("------------------------------");
             Console.WriteLine($"Passenger: {t.Passenger}");
             Console.WriteLine($"Adults: {t.Adults}, children: {t.Children}");
@@ -90,7 +100,7 @@ namespace Lab1 {
             }
             Console.WriteLine("\n------------------------------");
         }
-        public bool ChangeBookingDeadline(IFlight flight) {
+        public bool ChangeBookingDeadline(Flight flight) {
             Console.WriteLine($"Current deadline: {flight.StopBooking}. Departure time: {flight.TimeDepart}. ");
             Console.WriteLine("New deadline (yyyy mm dd hh mm ss). Should not be greater then departure time. Default - don't change anything:");
             Console.Write("Your input: ");
@@ -114,7 +124,7 @@ namespace Lab1 {
             }
             return false;
         }
-        public bool DelayFlight(IFlight flight) {
+        public bool DelayFlight(Flight flight) {
             Console.WriteLine($"Flight departures at {flight.TimeDepart}. Current delay is: {flight.MinDelayed}.");
             Console.Write("New delay (in minutes): ");
             int min;
@@ -128,9 +138,9 @@ namespace Lab1 {
             Console.WriteLine($"Success! New departure time: {flight.TimeDepart} ");
             return true;
         }
-        public void ShowFlights(List<IFlight> flights) {
+        public void ShowFlights(List<Flight> flights) {
             int idx = 0;
-            foreach (IFlight f in flights) {
+            foreach (Flight f in flights) {
                 Console.WriteLine();
                 Console.WriteLine(idx + 1);
                 Console.WriteLine("Departure: " + f.TimeDepart);
@@ -142,7 +152,7 @@ namespace Lab1 {
                 Console.WriteLine();
         }
 
-        private IFlight ChooseFlight(List<IFlight> flights) {
+        private Flight ChooseFlight(List<Flight> flights) {
             int max = flights.Count;
             Console.Write($"Choose flight (by number): ");
             string inp = Console.ReadLine();

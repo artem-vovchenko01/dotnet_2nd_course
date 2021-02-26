@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 
 namespace Lab1 {
-    class Flight : IFlight, IBase {
+    class Flight : IBase {
         public Guid Id { get; set; }
         public DateTime StopBooking {
             get { return _stopBooking == DateTime.MaxValue ? TimeDepart : _stopBooking; } 
@@ -24,7 +24,7 @@ namespace Lab1 {
         set {_timeDepart = value; } 
         }
         public int SeatsCapacity { get {return Route.Airplane.Seats; }}
-        public IRoute Route {get; set; }
+        public Route Route {get; set; }
         private DateTime _timeDepart;
         private DateTime _timeArrive;
         private DateTime _stopBooking = DateTime.MaxValue;

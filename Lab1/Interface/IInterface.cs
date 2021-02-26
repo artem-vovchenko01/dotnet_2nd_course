@@ -3,9 +3,9 @@ using System.Collections.Generic;
 namespace Lab1 {
     interface IInterface {
         void Begin();
-        bool ChangeBookingDeadline(IFlight flight);
-        bool DelayFlight(IFlight flight); 
-        void ShowFlights(List<IFlight> flights);
-        void ShowSoldTickets(IFlight flight);
+        bool ChangeBookingDeadline(Flight flight);
+        bool DelayFlight(Flight flight); 
+        void ShowFlights(List<Flight> flights);
+        void ShowSoldTickets(Flight flight);
     }
 }
