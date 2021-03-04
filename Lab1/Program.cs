@@ -6,11 +6,11 @@ namespace Lab1
     {
         static void Main(string[] args)
         {
-            Database db = new Database();
-            DaoFactory factory = new DaoFactory(db);
-            SampleDataGenerator generator = new SampleDataGenerator(factory);
+            IDatabase<int> db = new Database<int>(0, (seed) => seed + 1);
+            IDaoFactory<int> factory = new DaoFactory<int>(db);
+            SampleDataGenerator<int> generator = new SampleDataGenerator<int>(factory);
             generator.GenerateAll();
-            ConsoleInterface iFace = new ConsoleInterface(factory);
+            IInterface<int> iFace = new ConsoleInterface<int>(factory);
             iFace.Begin();
         }
     }

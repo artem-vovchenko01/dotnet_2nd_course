@@ -3,13 +3,13 @@ using System.Linq;
 using System;
 
 namespace Lab1 {
-    class ConsoleFlightFilter {
-        private DaoFactory db;
-        public ConsoleFlightFilter(DaoFactory factory) {
+    class ConsoleFlightFilter<Key> : IFlightFilter<Key> where Key : IComparable<Key> {
+        private IDaoFactory<Key> db;
+        public ConsoleFlightFilter(IDaoFactory<Key> factory) {
             db = factory;
         }
-        public List<Flight> Filter(List<Flight> flights) {
-            List<Flight> filteredFlights;
+        public IList<Flight<Key>> Filter(IList<Flight<Key>> flights) {
+            List<Flight<Key>> filteredFlights;
             string startDateStr;
             string endDateStr;
             Console.WriteLine("Search flights. Choose appropriate filters. Leave blank if defaults satisfy: ");

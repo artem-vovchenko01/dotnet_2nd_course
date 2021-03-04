@@ -1,18 +1,19 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Lab1 {
-    class TicketService {
-        private DaoFactory db;
-        public TicketService(DaoFactory factory) {
+    class TicketService<Key> : ITicketService<Key> where Key : IComparable<Key> {
+        private IDaoFactory<Key> db;
+        public TicketService(IDaoFactory<Key> factory) {
             db = factory;
         }
 
-        public int SoldTicketsCount(Flight flight) {
+        public int SoldTicketsCount(Flight<Key> flight) {
             return db.TicketDao.GetTicketsByFlight(flight).Count();
         }
 
-        public List<Ticket> SoldTickets(Flight flight) {
+        public IList<Ticket<Key>> SoldTickets(Flight<Key> flight) {
             return db.TicketDao.GetTicketsByFlight(flight);
         }
     }

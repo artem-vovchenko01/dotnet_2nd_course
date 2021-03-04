@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Lab1 {
-    class ConsoleInterface : IInterface {
-        private DaoFactory db;
-        private ConsoleFlightFilter flightFilter;
-        private TicketService ticketService;
-        private FlightService flightService;
-        public ConsoleInterface(DaoFactory factory) {
+    class ConsoleInterface<Key> : IInterface<Key> where Key : IComparable<Key> {
+        private IDaoFactory<Key> db;
+        private IFlightFilter<Key> flightFilter;
+        private ITicketService<Key> ticketService;
+        private IFlightService<Key> flightService;
+        public ConsoleInterface(IDaoFactory<Key> factory) {
             db = factory;
-            ticketService = new TicketService(factory);
-            flightService = new FlightService(factory);
+            ticketService = new TicketService<Key>(factory);
+            flightService = new FlightService<Key>(factory);
         }
         public void Begin() {
-            flightFilter = new ConsoleFlightFilter(db);
+            flightFilter = new ConsoleFlightFilter<Key>(db);
             string inp = "";
             bool done = false;
-            List<Flight> flights = new List<Flight>();
+            IList<Flight<Key>> flights = new List<Flight<Key>>();
             while (! done) {
                 PrintMenu();
                 inp = Console.ReadLine();
@@ -39,15 +39,15 @@ namespace Lab1 {
                         MenuShowSoldTickets();
                         break;
                     case "5": 
-                        db.TicketDao.GetAll().ForEach(t => PrinTicket(t));
+                        foreach(Ticket<Key> t in db.TicketDao.GetAll()) PrinTicket(t);
                         break;
                     }
             }
         }
 
         private void MenuDelayFlight() {
-            Flight flight;
-            List<Flight> flights = flightFilter.Filter(db.FlightDao.GetAll());
+            Flight<Key> flight;
+            IList<Flight<Key>> flights = flightFilter.Filter(db.FlightDao.GetAll());
             ShowFlights(flights);
             while (true) {
                 flight =  ChooseFlight(flights);
@@ -56,9 +56,9 @@ namespace Lab1 {
             }
         }
         private void MenuChangeBookingDeadline() {
-            List<Flight> flights = flightFilter.Filter(db.FlightDao.GetAll());
+            IList<Flight<Key>> flights = flightFilter.Filter(db.FlightDao.GetAll());
             ShowFlights(flights);
-            Flight flight;
+            Flight<Key> flight;
             while (true) {
                 flight = ChooseFlight(flights);
                 if (ChangeBookingDeadline(flight)) break;
@@ -66,25 +66,25 @@ namespace Lab1 {
             }
         }
         private void MenuShowSoldTickets() {
-            List<Flight> flights = flightFilter.Filter(db.FlightDao.GetAll());
+            IList<Flight<Key>> flights = flightFilter.Filter(db.FlightDao.GetAll());
             ShowFlights(flights);
-            Flight flight = ChooseFlight(flights);
+            Flight<Key> flight = ChooseFlight(flights);
             ShowSoldTickets(flight);
         }
-        public void ShowSoldTickets(Flight flight) {
+        public void ShowSoldTickets(Flight<Key> flight) {
             int sold = ticketService.SoldTicketsCount(flight);
             int all = flight.SeatsCapacity;
             int avail = flightService.SeatsAvailableCount(flight);
             Console.WriteLine($"All seats: {all}, available seats: {avail} ");  
             Console.WriteLine($"Tickets sold: {sold} ");
             int n = 1;
-            foreach(Ticket t in ticketService.SoldTickets(flight)) {
+            foreach(Ticket<Key> t in ticketService.SoldTickets(flight)) {
                 Console.WriteLine($"\nTicket {n}: ");
                 PrinTicket(t);
                 n++;
             }
         }
-        private void PrinTicket(Ticket t) {
+        private void PrinTicket(Ticket<Key> t) {
             Console.WriteLine("------------------------------");
             Console.WriteLine($"Passenger: {t.Passenger}");
             Console.WriteLine($"Adults: {t.Adults}, children: {t.Children}");
@@ -100,7 +100,7 @@ namespace Lab1 {
             }
             Console.WriteLine("\n------------------------------");
         }
-        public bool ChangeBookingDeadline(Flight flight) {
+        public bool ChangeBookingDeadline(Flight<Key> flight) {
             Console.WriteLine($"Current deadline: {flight.StopBooking}. Departure time: {flight.TimeDepart}. ");
             Console.WriteLine("New deadline (yyyy mm dd hh mm ss). Should not be greater then departure time. Default - don't change anything:");
             Console.Write("Your input: ");
@@ -124,7 +124,7 @@ namespace Lab1 {
             }
             return false;
         }
-        public bool DelayFlight(Flight flight) {
+        public bool DelayFlight(Flight<Key> flight) {
             Console.WriteLine($"Flight departures at {flight.TimeDepart}. Current delay is: {flight.MinDelayed}.");
             Console.Write("New delay (in minutes): ");
             int min;
@@ -138,9 +138,9 @@ namespace Lab1 {
             Console.WriteLine($"Success! New departure time: {flight.TimeDepart} ");
             return true;
         }
-        public void ShowFlights(List<Flight> flights) {
+        public void ShowFlights(IList<Flight<Key>> flights) {
             int idx = 0;
-            foreach (Flight f in flights) {
+            foreach (Flight<Key> f in flights) {
                 Console.WriteLine();
                 Console.WriteLine(idx + 1);
                 Console.WriteLine("Departure: " + f.TimeDepart);
@@ -152,7 +152,7 @@ namespace Lab1 {
                 Console.WriteLine();
         }
 
-        private Flight ChooseFlight(List<Flight> flights) {
+        private Flight<Key> ChooseFlight(IList<Flight<Key>> flights) {
             int max = flights.Count;
             Console.Write($"Choose flight (by number): ");
             string inp = Console.ReadLine();
