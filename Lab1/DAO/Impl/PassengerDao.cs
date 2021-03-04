@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System;
 
 namespace Lab1 {
-    class PassengerDao<Key> : AbstractDao<Passenger<Key>, Key> where Key : IComparable<Key> {
-        public PassengerDao(IDatabase<Key> database) : base(database) {
+    class PassengerDao : AbstractDao<Passenger<int>, int>, IPassengerDao<int> {
+        public PassengerDao(IDatabase<int> database) : base(database) {
             _entities = _db.Passengers;
         }
     }

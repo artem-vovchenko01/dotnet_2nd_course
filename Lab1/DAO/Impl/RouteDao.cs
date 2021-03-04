@@ -1,8 +1,8 @@
 using System;
 
 namespace Lab1 {
-    class RouteDao<Key> : AbstractDao<Route<Key>, Key> where Key : IComparable<Key> {
-        public RouteDao(IDatabase<Key> database) : base (database) {
+    class RouteDao : AbstractDao<Route<int>, int>, IRouteDao<int> {
+        public RouteDao(IDatabase<int> database) : base (database) {
             _entities = _db.Routes;
         }
     }

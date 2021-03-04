@@ -3,6 +3,6 @@ using System;
 
 namespace Lab1 {
     interface ITicketDao<Key> : IAbstractDao<Ticket<Key>, Key> where Key : IComparable<Key> {
-        List<Ticket<Key>> GetTicketsByFlight(Flight<Key> flight);
+        IList<Ticket<Key>> GetTicketsByFlight(Flight<Key> flight);
     }
 }

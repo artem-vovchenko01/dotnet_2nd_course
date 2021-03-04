@@ -7,10 +7,10 @@ namespace Lab1
         static void Main(string[] args)
         {
             IDatabase<int> db = new Database<int>(0, (seed) => seed + 1);
-            IDaoFactory<int> factory = new DaoFactory<int>(db);
-            SampleDataGenerator<int> generator = new SampleDataGenerator<int>(factory);
+            IDaoFactory<int> factory = new DaoFactory(db);
+            SampleDataGenerator generator = new SampleDataGenerator(factory);
             generator.GenerateAll();
-            IInterface<int> iFace = new ConsoleInterface<int>(factory);
+            IInterface<int> iFace = new ConsoleInterface(factory);
             iFace.Begin();
         }
     }

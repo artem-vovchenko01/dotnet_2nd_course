@@ -5,17 +5,8 @@ using System.Linq;
 namespace Lab1 {
     class Ticket<Key> : IBase<Key> where Key : IComparable<Key> {
         public Key Id { get; set; }
-        private Ticket() {}
-        public static Ticket<Key> GetNewTicket(Passenger<Key> passenger, int adults, int children, IList<int> seats, Flight<Key> flight, IDaoFactory<Key> db) {
-            IFlightService<Key> flightService = new FlightService<Key>(db);
-            int avail;
-            int adultAddPrice = 50, childrenAddPrice = 20;
-            if (seats.Count != adults || children > adults || DateTime.Today > flight.StopBooking) return null;
-            avail = flightService.SeatsAvailableCount(flight);
-            foreach (int i in seats) if (! flightService.IsSeatAvailable(flight, i)) return null;
-            return new Ticket<Key> {Flight = flight, SeatsOccupiedList = seats, Adults = adults, Children = children, Passenger = passenger, SeatsOccupied = seats.Count, Price = flight.Route.Airplane.DefaultPrice + (adults - 1) * adultAddPrice + children * childrenAddPrice};
-        }
-        public IList<int> SeatsOccupiedList {get {return _seatsOccupiedList; } private set {
+        internal Ticket() {}
+        public IList<int> SeatsOccupiedList {get {return _seatsOccupiedList; } internal set {
             foreach(int seat in value) _seatsOccupiedList.Add(seat);
         }}
         public int SeatsOccupied {get; set; }

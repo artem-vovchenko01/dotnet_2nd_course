@@ -1,7 +1,7 @@
 using System;
 
 namespace Lab1 {
-    class AirportDao<Key> : AbstractDao<Airport<Key>, Key> where Key : IComparable<Key> {
-        public AirportDao(IDatabase<Key> database) : base(database) {_entities = _db.Airports; }
+    class AirportDao: AbstractDao<Airport<int>, int>, IAirportDao<int> {
+        public AirportDao(IDatabase<int> database) : base(database) {_entities = _db.Airports; }
     }
 }
