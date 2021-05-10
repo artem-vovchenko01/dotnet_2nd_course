@@ -1,8 +1,7 @@
 using System;
 
 namespace Lab1 {
-    interface IPassengerDao<Key> : IAbstractDao<Passenger<Key>, Key> where Key : IComparable<Key> {
-
-    }
+    
+    interface IPassengerDao : IAbstractDao<Passenger, int> { }
 }
 

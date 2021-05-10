@@ -2,25 +2,25 @@ using System.Collections.Generic;
 using System;
 
 namespace Lab1 {
-    class Database<Key> : IDatabase<Key> where Key : IComparable<Key> {
-        public Key keySeed { get; private set; }
-        public Func<Key, Key> keyGenerator { get; private set; }
-        public Database(Key keySeed, Func<Key, Key> keyGenerator) {
+    class Database : IDatabase<int> {
+        public int keySeed { get; private set; }
+        public Func<int, int> keyGenerator { get; private set; }
+        public Database(int keySeed, Func<int, int> keyGenerator) {
             this.keySeed = keySeed;
             this.keyGenerator = keyGenerator;
-            Passengers = new Dictionary<Key, Passenger<Key>>();
-            Flights = new Dictionary<Key, Flight<Key>>();
-            Airplanes = new Dictionary<Key, Airplane<Key>>();
-            Airports = new Dictionary<Key, Airport<Key>>();
-            Tickets = new Dictionary<Key, Ticket<Key>>();
-            Routes = new Dictionary<Key, Route<Key>>();
+            Passengers = new Dictionary<int, Passenger>();
+            Flights = new Dictionary<int, Flight>();
+            Airplanes = new Dictionary<int, Airplane>();
+            Airports = new Dictionary<int, Airport>();
+            Tickets = new Dictionary<int, Ticket>();
+            Routes = new Dictionary<int, Route>();
         }
         
-        public IDictionary<Key, Passenger<Key>> Passengers { get; private set; }
-        public IDictionary<Key, Flight<Key>> Flights { get; private set; }
-        public IDictionary<Key, Airplane<Key>> Airplanes { get; private set; }
-        public IDictionary<Key, Airport<Key>> Airports { get; private set; }
-        public IDictionary<Key, Ticket<Key>> Tickets { get; private set; }
-        public IDictionary<Key, Route<Key>> Routes { get; private set; }
+        public IDictionary<int, IPassenger<int>> Passengers { get; private set; }
+        public IDictionary<int, IFlight<int>> Flights { get; private set; }
+        public IDictionary<int, IAirplane<int>> Airplanes { get; private set; }
+        public IDictionary<int, IAirport<int>> Airports { get; private set; }
+        public IDictionary<int, ITicket<int>> Tickets { get; private set; }
+        public IDictionary<int, IRoute<int>> Routes { get; private set; }
     }
 }
